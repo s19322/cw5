@@ -43,6 +43,7 @@ namespace cw5.Controllers
                 com.CommandText = "select IdStudy from Studies where Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
 
+                com.Transaction = tran;//polaczenie i transakcja
                 var dr = com.ExecuteReader();
                 if (!dr.Read())
                 {
@@ -51,8 +52,9 @@ namespace cw5.Controllers
                 }
                 int IdStudies = (int)dr["IdStudy"];
 
-               /* com.CommandText = "select TOP 1 from Enrollment where IdStudies=idStudies and semester=1 order by desc";
-                com.Parameters.AddWithValue("IdStudies", idStudies);
+                com.CommandText = "select TOP 1 from Enrollment where IdStudies="+IdStudies+" and semester=1 order by desc";
+                //com.Parameters.AddWithValue("IdStudies", IdStudies);
+               // com.Transaction = tran;
                 var dr2 = com.ExecuteReader();
                 if (!dr2.Read())
                 {
@@ -60,7 +62,7 @@ namespace cw5.Controllers
                         "values(@@IDENTITY+1,1,@IdStudies,'04.04.2020')";
 
 
-                }*/
+                }
 
             }
             return Ok();
