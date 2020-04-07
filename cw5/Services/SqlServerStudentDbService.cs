@@ -34,8 +34,8 @@ namespace cw5.Services
                 com.Transaction = tran;//polaczenie i transakcja
                 com.CommandText = "select IdStudy from Studies where Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
-                // try
-                //{
+                 try
+                {
                 var dr = com.ExecuteReader();
 
                 if (!dr.Read())
@@ -73,22 +73,22 @@ namespace cw5.Services
                 com.Parameters.AddWithValue("BirthDate", request.BirthDate);
                 com.Parameters.AddWithValue("IdEnrollment", IdEnroll);
 
-                response = new EnrollStudResponse()
-                {
-                    IndexNumber = int.Parse(request.IndexNumber),
-                    Semester = 1,
-                    Studies = request.Studies,
-                };
+                // response = new EnrollStudResponse()//??????format problem
+
+                response.IndexNumber = request.IndexNumber;
+                response.Semester = 1;
+                response.Studies = request.Studies;
+               
 
                 
                 dr.Close();
                     tran.Commit();
-                    /*  }
+                      }
                       catch (SqlException SqlEx)
                       {
                           tran.Rollback();
 
-                      }*/
+                      }
                 }
 
                 return response;
@@ -149,8 +149,8 @@ namespace cw5.Services
                     com.Parameters.AddWithValue("Semester", requestPr.Semester);
                     com.ExecuteNonQuery();
 
-                    com.CommandText = "select e.IdEnrollment, e.IdStudy from Enrollment e inner" +
-                                       "join Studies s on e.IdStudy = s.IdStudy" +
+                    com.CommandText = "select e.IdEnrollment, e.IdStudy,e.Semester,LastName,FirstName from Enrollment e inner" +
+                                       "join Student on Student.IdEnrollment=e.IdEnrollment inner join Studies s on e.IdStudy = s.IdStudy" +
                                  " where s.Name = @SName and Semester = @prev_semEnroll + 1";
 
                     com.Parameters.AddWithValue("SName", requestPr.Studies);
@@ -159,13 +159,16 @@ namespace cw5.Services
                     if (!dr.Read())
                     {
                         tran.Rollback();
+                        Console.WriteLine("Brak danych w bazie");
                     }
-                    
-                    resp.Semester = int.Parse(dr["Semester"].ToString());
-                    resp.IdEnrollment = int.Parse(dr["IdEnrollment"].ToString());
-                    resp.LastName = dr["LastName"].ToString();
-                    resp.FirstName = dr["FirstName"].ToString();
-
+                    resp = new EnrollStudResponsePr()
+                    {
+                     Semester = int.Parse(dr["e.Semester"].ToString()),
+                    IdEnrollment = int.Parse(dr["e.IdEnrollment"].ToString()),
+                    LastName = dr["LastName"].ToString(),
+                    FirstName = dr["FirstName"].ToString()
+                };
+                    dr.Close();
                     tran.Commit();
                 }catch(SqlException SqlEx)
                 {
