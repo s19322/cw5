@@ -20,12 +20,12 @@ namespace cw5.DTOs
         [MinLength(1)]
         public string Lastname { get; set; }
 
-        [Required]
+       [Required]
         public DateTime BirthDate { get; set; }
 
         [Required]
         public string Studies { get; set; }
 
-        
+     
     }
 }

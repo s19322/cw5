@@ -20,9 +20,8 @@ namespace cw5.Models
       
         public DateTime BirthDate { get; set; }
         
-
         public string Studies { get; set; }
         
-        public string Semester { get; set; }
+        public int Semester { get; set; }
     }
 }

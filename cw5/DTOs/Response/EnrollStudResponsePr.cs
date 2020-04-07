@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 
 namespace cw5.DTOs.Response
 {
-    public class EnrollStudResponse
+    public class EnrollStudResponsePr
     {
-        public int Semester { get; set; }
-        
-        public string Studies { get; set; }
-
+        public string Semester { get; set; }
     }
 }
