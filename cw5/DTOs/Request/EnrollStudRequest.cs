@@ -13,9 +13,11 @@ namespace cw5.DTOs
         public string IndexNumber { get; set; }//nazwa studiow
 
         [Required]
+        [MinLength(1)]
         public string FirstName { get; set; }
 
         [Required]
+        [MinLength(1)]
         public string Lastname { get; set; }
 
         [Required]
