@@ -11,20 +11,20 @@ namespace cw5.Services
     public class SqlServerStudentDbService : IStudentDbService
     {
 
-        public int Enrollstudent(EnrollStudRequest request)
+        public EnrollStudResponse Enrollstudent(EnrollStudRequest request)
         {
-            var student = new Student();
+            /*var student = new Student();
             student.IndexNumber = request.IndexNumber;
             student.FirstName = request.FirstName;
             student.Lastname = request.Lastname;
             student.Studies = request.Studies;
-            student.BirthDate = request.BirthDate;
+            student.BirthDate = request.BirthDate;*/
 
+
+
+            // response.Semester = student.Semester;
 
             var response = new EnrollStudResponse();
-            response.Semester = student.Semester;
-
-
             using (SqlConnection con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s19322;Integrated Security=True"))
             using (SqlCommand com = new SqlCommand())
             {
@@ -34,55 +34,67 @@ namespace cw5.Services
                 com.Transaction = tran;//polaczenie i transakcja
                 com.CommandText = "select IdStudy from Studies where Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
-                try
-                {
-                    var dr = com.ExecuteReader();
+                // try
+                //{
+                var dr = com.ExecuteReader();
 
-                    if (!dr.Read())
-                    {
-                        tran.Rollback();
-                        //  return BadRequest("This course doesn't exists");
-                    }
-
-                    int IdStudies = (int)dr["IdStudy"];
-                    dr.Close();
-
-                    int IdEnroll = getIdEnroll(com, IdStudies);
-
-                    if (IdEnroll == 0)
-                    {
-                        InsertEnroll(com, IdStudies);
-                        IdEnroll = getIdEnroll(com, IdStudies);
-
-                    }
-
-                    com.CommandText = "select IndexNumber from Student where IndexNumber=@IndexNumber";
-                    com.Parameters.AddWithValue("IndexNumber", request.IndexNumber);
-                    dr = com.ExecuteReader();
-                    if (dr.Read())
-                    {
-                        tran.Rollback();
-                        //  return BadRequest("student with IndexNumber: {request.IndexNmber} already exists");
-                    }
-                    com.CommandText = "insert into Student (IndexNumber,FirstName,LastName,BirthDate,IdEnrollment)" +
-                        "values(@Index,@FirstName,@LastName,@BirthDate,@IdEnrollment) ";
-                    com.Parameters.AddWithValue("Index", request.IndexNumber);
-                    com.Parameters.AddWithValue("FirstName", request.FirstName);
-                    com.Parameters.AddWithValue("LastName", request.Lastname);
-                    com.Parameters.AddWithValue("BirthDate", request.BirthDate);
-                    com.Parameters.AddWithValue("IdEnrollment", IdEnroll);
-
-                    tran.Commit();
-                }
-                catch (SqlException SqlEx)
+                if (!dr.Read())
                 {
                     tran.Rollback();
+                    //  return BadRequest("This course doesn't exists");
+                }
+
+                int IdStudies = (int)dr["IdStudy"];
+                dr.Close();
+
+                int IdEnroll = getIdEnroll(com, IdStudies);
+
+                if (IdEnroll == 0)
+                {
+                    InsertEnroll(com, IdStudies);
+                    IdEnroll = getIdEnroll(com, IdStudies);
 
                 }
-            }
-              return response.Semester;
 
-        }
+                com.CommandText = "select IndexNumber from Student where IndexNumber=@IndexNumber";
+                com.Parameters.AddWithValue("IndexNumber", request.IndexNumber);
+                dr = com.ExecuteReader();
+                if (dr.Read())
+                {
+                    tran.Rollback();
+                    //  return BadRequest("student with IndexNumber: {request.IndexNmber} already exists");
+                }
+                dr.Close();
+                com.CommandText = "insert into Student (IndexNumber,FirstName,LastName,BirthDate,IdEnrollment)" +
+                    "values(@Index,@FirstName,@LastName,@BirthDate,@IdEnrollment) ";
+                com.Parameters.AddWithValue("Index", request.IndexNumber);
+                com.Parameters.AddWithValue("FirstName", request.FirstName);
+                com.Parameters.AddWithValue("LastName", request.Lastname);
+                com.Parameters.AddWithValue("BirthDate", request.BirthDate);
+                com.Parameters.AddWithValue("IdEnrollment", IdEnroll);
+
+                response = new EnrollStudResponse()
+                {
+                    IndexNumber = int.Parse(request.IndexNumber),
+                    Semester = 1,
+                    Studies = request.Studies,
+                };
+
+                
+                dr.Close();
+                    tran.Commit();
+                    /*  }
+                      catch (SqlException SqlEx)
+                      {
+                          tran.Rollback();
+
+                      }*/
+                }
+
+                return response;
+
+            }
+        
         public int getIdEnroll(SqlCommand com, int IdStudies)
         {
 
@@ -106,11 +118,12 @@ namespace cw5.Services
 
 
 
-        public int PromoteStudents(EnrollStudRequestPr requestPr)
+        public EnrollStudResponsePr PromoteStudents(EnrollStudRequestPr requestPr)
         {
+            EnrollStudResponsePr resp = new EnrollStudResponsePr();
 
             //  throw new NotImplementedException();
-            using (SqlConnection con = new SqlConnection())
+            using (SqlConnection con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s19322;Integrated Security=True"))
             using (SqlCommand com = new SqlCommand())
             {
                 com.Connection = con;
@@ -130,12 +143,35 @@ namespace cw5.Services
                         tran.Rollback();
                         //  return BadRequest("Database doesn't have this data:{reqestPr.Semester} or {requestPr.Studies}");
                     }
+                    dr.Close();
+                    com.CommandText = "exec PromotionProcedure @Studies, @Semester";
+                    com.Parameters.AddWithValue("Studies", requestPr.Studies);
+                    com.Parameters.AddWithValue("Semester", requestPr.Semester);
+                    com.ExecuteNonQuery();
+
+                    com.CommandText = "select e.IdEnrollment, e.IdStudy from Enrollment e inner" +
+                                       "join Studies s on e.IdStudy = s.IdStudy" +
+                                 " where s.Name = @SName and Semester = @prev_semEnroll + 1";
+
+                    com.Parameters.AddWithValue("SName", requestPr.Studies);
+                    com.Parameters.AddWithValue("pev_semEnroll", requestPr.Semester);
+                    dr = com.ExecuteReader();
+                    if (!dr.Read())
+                    {
+                        tran.Rollback();
+                    }
+                    
+                    resp.Semester = int.Parse(dr["Semester"].ToString());
+                    resp.IdEnrollment = int.Parse(dr["IdEnrollment"].ToString());
+                    resp.LastName = dr["LastName"].ToString();
+                    resp.FirstName = dr["FirstName"].ToString();
+
                     tran.Commit();
                 }catch(SqlException SqlEx)
                 {
                     tran.Rollback();
                 }
-                return requestPr.Semester;
+                return resp;
             }
         }
     }

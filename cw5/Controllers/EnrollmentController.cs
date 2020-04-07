@@ -11,9 +11,9 @@ namespace cw5.Controllers
     [ApiController]
     public class EnrollmentController : ControllerBase
     {
-        private SqlServerStudentDbService _service ;
+        private IStudentDbService _service ;
        
-        public EnrollmentController(SqlServerStudentDbService service)
+        public EnrollmentController(IStudentDbService service)
         {
             _service = service;
         }
@@ -21,18 +21,19 @@ namespace cw5.Controllers
         public IActionResult EnrollStudent(EnrollStudRequest request)
         {
 
-             int resp = _service.Enrollstudent(request);
+             var resp = _service.Enrollstudent(request);
 
-            IActionResult response = Created("student enrolled succesfully", resp);
-            return Ok(response);
+            IActionResult result = Created("enrolled",resp);
+            return result;
                 }
          
     [HttpPost("promotions")]
-    public ActionResult EnrollStudents(EnrollStudRequestPr requestPr)
+    public IActionResult EnrollStudents(EnrollStudRequestPr requestPr)
         {
-            int resp = _service.PromoteStudents(requestPr);
-
-            return Ok(resp);
+            var resp = _service.PromoteStudents(requestPr);
+            IActionResult response = Created("promoted", resp);
+          
+            return response;
         }
 
 
