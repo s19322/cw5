@@ -163,8 +163,8 @@ namespace cw5.Services
                     }
                     resp = new EnrollStudResponsePr()
                     {
-                     Semester = int.Parse(dr["e.Semester"].ToString()),
-                    IdEnrollment = int.Parse(dr["e.IdEnrollment"].ToString()),
+                     Semester = int.Parse(dr["Semester"].ToString()),
+                    IdEnrollment = int.Parse(dr["IdEnrollment"].ToString()),
                     LastName = dr["LastName"].ToString(),
                     FirstName = dr["FirstName"].ToString()
                 };
