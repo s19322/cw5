@@ -9,7 +9,6 @@ namespace cw5.DTOs.Response
     {
         public int Semester { get; set; }
         
-       
         public string IndexNumber { get; set; }
         public string Studies { get; set; }
 

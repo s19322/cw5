@@ -12,17 +12,7 @@ namespace cw5.Services
 {
     public interface IStudentDbService
     {
-        public EnrollStudResponse Enrollstudent(EnrollStudRequest request)
-        {
-
-            throw new NotImplementedException();
-      
-        }
-
-        public EnrollStudResponsePr PromoteStudents(EnrollStudRequestPr requestPr)
-        {
-
-            throw new NotImplementedException();
-        }
+        public EnrollStudResponse EnrollStudent(EnrollStudRequest request);
+        public EnrollStudResponsePr PromoteStudent(EnrollStudRequestPr request);
     }
 }

@@ -18,22 +18,21 @@ namespace cw5.Controllers
             _service = service;
         }
         [HttpPost]
-        public IActionResult EnrollStudent(EnrollStudRequest request)
+        public EnrollStudResponse EnrollStudent(EnrollStudRequest request)
         {
 
-             var resp = _service.Enrollstudent(request);
+            EnrollStudResponse studentResponse = _service.EnrollStudent(request);
 
-            IActionResult result = Created("enrolled",resp);
-            return result;
+           
+            return studentResponse;
                 }
          
     [HttpPost("promotions")]
-    public IActionResult EnrollStudents(EnrollStudRequestPr requestPr)
+    public EnrollStudResponsePr PromoteStudents(EnrollStudRequestPr requestPr)
         {
-            var resp = _service.PromoteStudents(requestPr);
-            IActionResult response = Created("promoted", resp);
-          
-            return response;
+            EnrollStudResponsePr studPr=  _service.PromoteStudent(requestPr);
+  
+            return studPr;
         }
 
 
