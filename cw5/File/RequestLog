@@ -205,3 +205,69 @@
 	"IndexNumber":"s2"
 	
 }
+[14.04.2020 16:19:27] GET /api/students?Index=0
+{
+	"IndexNumber":"s2"
+	
+}
+[14.04.2020 16:19:33] GET /api/students?Index=s1932
+{
+	"IndexNumber":"s2"
+	
+}
+[14.04.2020 16:19:40] GET /api/students?Index=s1932
+{
+	"IndexNumber":"s193222"
+	
+}
+[14.04.2020 16:20:09] GET /api/students
+
+[14.04.2020 16:20:09] GET /favicon.ico
+
+[14.04.2020 16:20:31] GET /api/students?Index=s198
+{
+	"IndexNumber":"s193222"
+	
+}
+[15.04.2020 10:30:35] GET /api/students
+
+[15.04.2020 10:30:35] GET /favicon.ico
+
+[07.05.2020 11:08:02] GET /api/students
+
+[07.05.2020 11:08:02] GET /favicon.ico
+
+[07.05.2020 11:08:32] GET /api/%5Bcontroller%5D
+
+[07.05.2020 11:08:32] GET /favicon.ico
+
+[07.05.2020 11:08:35] GET /api/%5Bcontroller%5D
+
+[07.05.2020 11:08:35] GET /favicon.ico
+
+[07.05.2020 11:29:58] GET /api/students
+
+[07.05.2020 11:29:58] GET /favicon.ico
+
+[07.05.2020 11:30:29] GET /api/students
+
+[07.05.2020 11:30:29] GET /favicon.ico
+
+[07.05.2020 11:32:22] GET /api/students/2
+
+[07.05.2020 11:32:22] GET /favicon.ico
+
+[07.05.2020 11:33:07] POST /api/enrollments
+{
+	"IndexNumber": 2
+	
+}
+[07.05.2020 11:33:22] POST /api/enrollments
+{
+	"IndexNumber": 0
+	
+}
+[11.05.2020 22:00:16] GET /api/students
+
+[11.05.2020 22:00:16] GET /favicon.ico
+

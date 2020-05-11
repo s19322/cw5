@@ -1,19 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using cw5.Middlewares;
 using cw5.Models;
+using cw5.ModelsFrameWorkCore;
 using cw5.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace cw5
@@ -30,8 +26,15 @@ namespace cw5
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //uwierzytelnienie HTTP basic
+            //tu bezpiecznie zrobic connectionstring !!!!
+            services.AddScoped<IStudentDbService, EfStudentDbService>();
+            services.AddDbContext<s19322Context>(options=> {
+                options.UseSqlServer("Data Source = db - mssql; Initial Catalog = s19322; Integrated Security = True");
+            });
             services.AddTransient<IStudentDbService, SqlServerStudentDbService>();
-            services.AddControllers();
+            services.AddControllers()
+                    .AddXmlSerializerFormatters();
            
             //1.dodawanie dokumentacji
             
@@ -40,7 +43,7 @@ namespace cw5
                 config.SwaggerDoc("v1", new OpenApiInfo { Title = "Students App API", Version = "v1" });
             });
         }
-
+       
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -67,7 +70,7 @@ namespace cw5
 
                 string index = context.Request.Headers["Index"].ToString();
                 var stud = new StudentIndexChecker();
-                Student student = stud.CheckIndex(index);
+                Models.Student student = stud.CheckIndex(index);
 
                 if (student== null)
                 {

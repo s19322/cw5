@@ -52,45 +52,5 @@ namespace cw5.Services
 
         }
 
-/*        public IEnumerable<Student> GetStudents()
-        { 
-
-            return students;
-        }*/
-     /*   public StudentIndexChecker()
-        {
-            students = new List<Student>
-            {
-                new Student
-                {
-                    
-                    IndexNumber = "s19344",
-                    FirstName = "Pawel",
-                    Lastname = "Kowalski",
-                    BirthDate = new DateTime(1998, 2, 1),
-                    
-                },
-                new Student
-                {
-                    
-                    IndexNumber = "s9870",
-                    FirstName = "Krolina",
-                    Lastname = "Nowak",
-                    BirthDate = new DateTime(1990, 12, 10),
-                   
-                },
-                new Student
-                {
-                  
-                    IndexNumber = "s1876",
-                    FirstName = "Andrzej",
-                    Lastname = "Pawlowicz",
-                    BirthDate = new DateTime(1998, 10, 12),
-                    
-                }
-            };
-        }
-*/
-       
     }
 }
