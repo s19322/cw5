@@ -1,4 +1,5 @@
 ﻿using cw5.DTOs;
+using cw5.DTOs.Request;
 using cw5.DTOs.Response;
 using cw5.Models;
 using cw5.Services;
@@ -35,14 +36,39 @@ namespace cw5.Controllers
             return studPr;
         }
 
+        [HttpGet("students")]
+        public IActionResult getStudents()
+        {
+            IActionResult response = Ok(_service.getAllStudentsData());
+            return response;
+        }
+       [HttpPost("modifystudent")]
+        public IActionResult ModifyStudent(Student request)
+        {
+            IActionResult response = Ok(request.IndexNumber);
+
+                _service.ModifyStudent(request);
+
+            return response;
+        }
+        [HttpPost("deletestudent")]
+        public IActionResult DeleteStudent(DeleteStudReq request)
+        {
+            IActionResult response = Ok($"Successfully deleted {request.IndexNumber}");
+           
+                _service.DeleteStudent(request);
+            
+          
+            return response;
+        }
 
 
 
     }
-       
 
 
 
 
-   
+
+
 }
